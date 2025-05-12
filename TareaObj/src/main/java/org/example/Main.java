@@ -1,5 +1,8 @@
 package org.example;
 
+import java.time.*;
+import java.util.Date;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
@@ -13,6 +16,19 @@ public class Main {
         System.out.println(reunion2);
         System.out.println(depaMate);
 
+
+        
+        Date fecha = new Date();
+        LocalDate fechalocal = fecha.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        System.out.println(fecha);
+        System.out.println(fechalocal);
+        System.out.println();
+        Instant hora = Instant.now();
+        System.out.println(hora);
+        LocalTime horalocal = hora.atZone(ZoneId.systemDefault()).toLocalTime();
+        System.out.println(horalocal);
 
 
     }

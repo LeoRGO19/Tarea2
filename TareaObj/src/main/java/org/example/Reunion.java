@@ -10,6 +10,13 @@ public abstract class Reunion {
     private Duration duracionPrevista;
     private Instant horaInicio;
     private Instant horaFin;
+    public Reunion(){
+        fecha = new Date();
+        LocalDate fechalocal = fecha.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
+    }
     public List<Asistencia> obtenerAsistencias(){
         return null;
     }
@@ -29,10 +36,10 @@ public abstract class Reunion {
         return 0;
     }
     public void iniciar(){
-
+        horaInicio = Instant.now();
     }
     public void finalizar(){
-
+        horaFin = Instant.now();
     }
     @Override
     public String toString() {
