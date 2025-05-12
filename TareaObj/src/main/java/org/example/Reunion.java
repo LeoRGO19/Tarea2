@@ -1,6 +1,8 @@
 package org.example;
 
+import java.util.Date;
 import java.util.List;
+import java.time.*;
 
 public abstract class Reunion {
     private Date fecha;
@@ -8,13 +10,13 @@ public abstract class Reunion {
     private Duration duracionPrevista;
     private Instant horaInicio;
     private Instant horaFin;
-    public list<Asistencia> obtenerAsistencias(){
+    public List<Asistencia> obtenerAsistencias(){
 
     }
-    public list<Asistencia> obtenerAusencias(){
+    public List<Asistencia> obtenerAusencias(){
 
     }
-    public list<Asistencia> obtenerRetrasos(){
+    public List<Asistencia> obtenerRetrasos(){
 
     }
     public int obtenerTotalAsistencia(){
