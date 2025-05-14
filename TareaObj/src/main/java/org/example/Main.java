@@ -35,6 +35,9 @@ public class Main {
         n.addEmpleado(leo);
         n.addEmpleado(rafa);
         System.out.println(n);
-
+        Nota prueba = new Nota("Nota n°1");
+        Retraso prueba1 =  new Retraso(leo, Instant.now());
+        System.out.println(prueba);
+        System.out.println(prueba1);
     }
 }

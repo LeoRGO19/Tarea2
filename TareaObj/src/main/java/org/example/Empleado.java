@@ -50,7 +50,7 @@ public class Empleado implements Invitable{
     }
     @Override
     public String toString(){
-        return "Empleado: " + nombre + " " + apellidos + " id: " + id + " correo: " + correo + " Dpto: " + departamento + "\n";
+        return "\n Empleado: " + nombre + " " + apellidos + " id: " + id + " correo: " + correo + " Dpto: " + departamento ;
     }
 
     @Override

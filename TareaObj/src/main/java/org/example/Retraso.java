@@ -1,5 +1,6 @@
 package org.example;
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 
 public class Retraso extends Asistencia{
     private Instant hora;
@@ -7,7 +8,7 @@ public class Retraso extends Asistencia{
     Retraso(Empleado empleado, Instant hora){
         super(empleado);
         this.hora = hora;
-        this.horalocal = hora.atZone(ZoneId.systemDefault()).toLocalTime();
+        this.horalocal = hora.atZone(ZoneId.systemDefault()).toLocalTime().truncatedTo(ChronoUnit.SECONDS);
     }
     public Instant getHora(){
         return hora;
@@ -18,6 +19,6 @@ public class Retraso extends Asistencia{
 
     @Override
     public String toString() {
-        return "Retraso de: " + getEmpleado().getNombre() + " a las " + horalocal;
+        return "Retraso de " + getEmpleado().getNombre() + ": Llegó a las " + horalocal;
     }
 }
