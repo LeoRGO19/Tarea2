@@ -7,6 +7,7 @@ import java.util.Date;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
+        /*
         System.out.println("algo");
         Empleado ricardo = new Empleado();
         Departamento depaMate = new Departamento();
@@ -15,8 +16,6 @@ public class Main {
         System.out.println(reunion);
         System.out.println(reunion2);
         System.out.println(depaMate);
-
-
         
         Date fecha = new Date();
         LocalDate fechalocal = fecha.toInstant()
@@ -28,8 +27,14 @@ public class Main {
         Instant hora = Instant.now();
         System.out.println(hora);
         LocalTime horalocal = hora.atZone(ZoneId.systemDefault()).toLocalTime();
-        System.out.println(horalocal);
-
+        System.out.println(horalocal);*/
+        Empleado leo = new Empleado("Leo", "Guerrero", "123", "leoth159@gmal.com", "informática");
+        Empleado rafa = new Empleado("Rafa", "Ortega", "222", "leoth159@gmal.com", "informática");
+        System.out.println(leo);
+        Departamento n = new Departamento("Informática");
+        n.addEmpleado(leo);
+        n.addEmpleado(rafa);
+        System.out.println(n);
 
     }
 }
