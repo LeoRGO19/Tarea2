@@ -57,4 +57,5 @@ public class Empleado implements Invitable{
     public void invitar(){
         System.out.println("El empleado " + nombre + " " + apellidos + " de id: " + id + " ha sido invitado a la reunión");
     }
+
 }

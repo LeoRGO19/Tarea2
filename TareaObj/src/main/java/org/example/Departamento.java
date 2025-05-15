@@ -33,6 +33,12 @@ public class Departamento implements Invitable{
     public void invitar() {
         System.out.println("Departamento " + nombre + " ha sido invitado a la reunión");
     }
+
+    @Override
+    public String getNombre() {
+        return "";
+    }
+
     @Override
     public String toString() {
         return "Departamento: " + nombre + "\nTotal de empleados: " + empleados.size() + "\n" + empleados;

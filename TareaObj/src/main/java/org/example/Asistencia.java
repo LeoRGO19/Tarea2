@@ -1,12 +1,12 @@
 package org.example;
 
 public class Asistencia{
-    private Empleado empleado;
-    public Asistencia(Empleado empleado) {
+    private Invitable empleado;
+    public Asistencia(Invitable empleado) {
         this.empleado = empleado;
     }
 
-    public Empleado getEmpleado(){
+    public Invitable getEmpleado(){
         return empleado;
     }
     public void setEmpleado(Empleado e){

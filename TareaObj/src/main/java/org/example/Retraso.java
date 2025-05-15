@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit;
 public class Retraso extends Asistencia{
     private Instant hora;
     LocalTime horalocal;
-    Retraso(Empleado empleado, Instant hora){
+    Retraso(Invitable empleado, Instant hora){
         super(empleado);
         this.hora = hora;
         this.horalocal = hora.atZone(ZoneId.systemDefault()).toLocalTime().truncatedTo(ChronoUnit.SECONDS);
