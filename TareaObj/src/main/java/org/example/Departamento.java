@@ -9,10 +9,11 @@ public class Departamento implements Invitable{
         this.empleados = new ArrayList<>();
         this.nombre = nombreDepartamento;
     }
-    public void setNombreDepartamento(String nuevo){
+    public void setNombre(String nuevo){
         this.nombre = nuevo;
     }
-    public String getNombreDepartamento(){
+    @Override
+    public String getNombre(){
         return nombre;
     }
     public int obtenerCantidadEmpleados(){
@@ -20,6 +21,9 @@ public class Departamento implements Invitable{
     }
     public void addEmpleado(Empleado e){
         empleados.add(e);
+    }
+    public ArrayList<Empleado> obtenerListaDepartamento(){
+        return empleados;
     }
     /*
     @Override
@@ -31,12 +35,10 @@ public class Departamento implements Invitable{
 
     @Override
     public void invitar() {
-        System.out.println("Departamento " + nombre + " ha sido invitado a la reunión");
-    }
-
-    @Override
-    public String getNombre() {
-        return "";
+        System.out.println("Departamento " + nombre + " ha sido invitado a la reunión: \n");
+        for (Empleado e : empleados) {
+            e.invitar();
+        }
     }
 
     @Override

@@ -5,7 +5,6 @@ public class Nota {
     private String contenido;
 
     public Nota(String oracion1){
-
         this.contenido = oracion1;
     }
     public void setNota (String oracion){

@@ -19,9 +19,11 @@ public abstract class Reunion {
     private ArrayList<Invitable> ausentes;    //Lista de ausentes
     private ArrayList<Nota> notas;
     private Empleado organizador;
+    private int tipo;
 
-    public Reunion(Empleado organizador, String fechaReunion, int tiempoReunion){
+    public Reunion(Empleado organizador, String fechaReunion, int tiempoReunion, int tipo){
         this.organizador = organizador;
+        this.tipo = tipo;
         this.horaPrevista = LocalDateTime.parse(fechaReunion);
         this.duracionPrevista = horaPrevista.plus(Duration.ofMinutes(tiempoReunion));
         System.out.println(horaPrevista);
@@ -38,75 +40,214 @@ public abstract class Reunion {
     }
 
 
-    public void agregarInvitado(Invitable invitado){
-        invitados.add(invitado);                                     //Agrega el invitado a la lista.
-        invitaciones.add(new Invitacion(Instant.now(), invitado));    //agrega la invitacion a la lista.
-        invitado.invitar();                                           //manda la invitacion
-        ausentes.add(invitado);
+    public void agregarInvitado(Invitable invitado) throws InvitacionRepetidaException{
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                if (invitado instanceof Departamento) {
+                    Departamento departamento = (Departamento) invitado;
+                    for(Empleado e: (departamento.obtenerListaDepartamento())){
+                        if (invitados.contains(e)) {
+                            try {
+                                throw new InvitacionRepetidaException(e.getNombre());
+                            } catch (InvitacionRepetidaException ex) {
+                                System.out.println(ex.getMessage());
+                            }
+                        } else {
+                            invitados.add(e);
+                            invitaciones.add(new Invitacion(Instant.now(), e));
+                            ausentes.add(e);
+                            e.invitar();
+                        }
+                    }
+                } else {
+                    if (invitados.contains(invitado)) {
+                        try {
+                            throw new InvitacionRepetidaException(invitado.getNombre());
+                        } catch (InvitacionRepetidaException ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                    } else {
+                        invitados.add(invitado);
+                        invitaciones.add(new Invitacion(Instant.now(), invitado));
+                        ausentes.add(invitado);
+                        invitado.invitar();
+                    }
+                }
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+        }
+
     }
     public ArrayList<Invitable> getInvitados() {
-        return invitados;
-    }
-    public void agregarAsistente(Invitable invitado,Instant tiempo_Entrada) {
-        Asistencia persona;
-        if (tiempo_Entrada.isAfter(horaInicio.plus(Duration.ofMinutes(10)))){
-            persona = new Retraso(invitado, tiempo_Entrada);
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                return invitados;
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+            return null;
         }
-        else {
-            persona = new Asistencia(invitado);
-        }
-        asistentes.add(persona);
-        ausentes.remove(invitado);
     }
-
+    public void agregarAsistente(Invitable invitado,Instant tiempo_Entrada){
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                if (!invitados.contains(invitado)) {
+                    System.out.println("El invitado " + invitado.getNombre() + " no está registrado como invitado en la reunión.");
+                } else {
+                    Asistencia persona;
+                    if (tiempo_Entrada.isAfter(horaInicio.plus(Duration.ofMinutes(10)))){
+                        persona = new Retraso(invitado, tiempo_Entrada);
+                    }
+                    else {
+                        persona = new Asistencia(invitado);
+                    }
+                    asistentes.add(persona);
+                    ausentes.remove(invitado);
+                }
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+        }
+    }
 
     public ArrayList<Invitable> obtenerAsistencias() {
-        ArrayList<Invitable> presentes = new ArrayList<>();
-        for (Asistencia a : asistentes) {
-            presentes.add(a.getEmpleado());
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                ArrayList<Invitable> presentes = new ArrayList<>();
+                for (Asistencia a : asistentes) {
+                    presentes.add(a.getEmpleado());
+                }
+                return presentes;
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+            return null;
         }
-        return presentes;
+
     }
     public ArrayList<Invitable> obtenerAusencias(){
-        return ausentes;
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                return ausentes;
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+            return null;
+        }
     }
 
     public ArrayList<Invitable> obtenerRetrasos(){
-        ArrayList<Invitable> atrasados = new ArrayList<>();
-        for (Asistencia a : asistentes){
-            if (a instanceof Retraso){
-                atrasados.add(a.getEmpleado());
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                ArrayList<Invitable> atrasados = new ArrayList<>();
+                for (Asistencia a : asistentes){
+                    if (a instanceof Retraso){
+                        atrasados.add(a.getEmpleado());
+                    }
+                }
+                return atrasados;
             }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+            return null;
         }
-        return atrasados;
     }
     public int obtenerTotalAsistencia(){
-        return asistentes.size();
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                return asistentes.size();
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+
     }
     public float obtenerPorcentajeAsistencia(){
-        System.out.println(asistentes);
-        System.out.println(invitados);
-        return ((float)asistentes.size() /(float)invitados.size())*100; //* puse por 100 por el porcentaje *
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                System.out.println(asistentes);
+                System.out.println(invitados);
+                return ((float)asistentes.size() /(float)invitados.size())*100; //* puse por 100 por el porcentaje *
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+            return -1;
+        }
+
     }
     public float calcularTiempoReal(Instant inicio, Instant Final){
-        if (horaInicio != null && horaFin != null) {
-            Duration diferencia = Duration.between(inicio, Final); //Me falta ver como poner tiempos especificos
-            return (float) diferencia.toSeconds();
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                if (horaInicio != null && horaFin != null) {
+                    Duration diferencia = Duration.between(inicio, Final); //Me falta ver como poner tiempos especificos
+                    return (float) diferencia.toSeconds();
+                }
+                return 0;
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+            return -1;
         }
-        return 0;
     }
     public void iniciar(){
-        horaInicio = Instant.now();
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                horaInicio = Instant.now();
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+        }
     }
     public void finalizar(){
-        horaFin = Instant.now();
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                horaFin = Instant.now();
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+        }
     }
     @Override
     public String toString() {
-        return devolverN();
+        return devolverN() + " organizada por: " + organizador.getNombre();
     }
     public String devolverN(){
         return null;
+    }
+    public void addNota(Nota e){
+        try{
+            if (TipoReunion.obtenerTipo(tipo) == null) {
+                throw new ReunionNoExisteException();
+            } else {
+                notas.add(e);
+            }
+        }catch (ReunionNoExisteException ex){
+            System.out.println(ex.getMessage());
+        }
     }
 
 }

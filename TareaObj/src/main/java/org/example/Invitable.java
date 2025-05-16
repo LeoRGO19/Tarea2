@@ -6,5 +6,5 @@ public interface Invitable {
 
     }
 
-    String getNombre();
+    public String getNombre();
 }
