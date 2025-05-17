@@ -8,7 +8,7 @@ public class ReunionPresencial extends Reunion{
     private int tipoInt;
 
     public ReunionPresencial(String salaReunion,Empleado organizador, String fechaReunion, int tiempoReunion, int tipo) throws TipoReunionInvalidoException{
-        super(organizador,fechaReunion,tiempoReunion, tipo);
+        super(organizador,fechaReunion,tiempoReunion, tipo, salaReunion);
         try{
             TipoReunion tipoValido = TipoReunion.obtenerTipo(tipo);
             if (tipoValido == null) {

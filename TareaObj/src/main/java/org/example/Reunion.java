@@ -1,14 +1,18 @@
 package org.example;
 
-import java.awt.image.AreaAveragingScaleFilter;
-import java.lang.classfile.attribute.RuntimeInvisibleAnnotationsAttribute;
-import java.lang.reflect.Array;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.ArrayList;
 import java.time.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.Duration;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 public abstract class Reunion {
-    private Date fecha;
+    //private Date fecha;
     private LocalDateTime horaPrevista;
     private LocalDateTime duracionPrevista;
     private Instant horaInicio;
@@ -20,26 +24,38 @@ public abstract class Reunion {
     private ArrayList<Nota> notas;
     private Empleado organizador;
     private int tipo;
+    private String sala_o_enlace;
+    private LocalDate fechalocal;
+    private boolean finalizada = true;
+    private boolean iniciada = false;
 
-    public Reunion(Empleado organizador, String fechaReunion, int tiempoReunion, int tipo){
+    public Reunion(Empleado organizador, String fechaReunion, int tiempoReunion, int tipo, String sala_enlace){
+        this.sala_o_enlace = sala_enlace;
         this.organizador = organizador;
         this.tipo = tipo;
         this.horaPrevista = LocalDateTime.parse(fechaReunion);
         this.duracionPrevista = horaPrevista.plus(Duration.ofMinutes(tiempoReunion));
         System.out.println(horaPrevista);
         System.out.println(duracionPrevista);
-        fecha = new Date();
+        this.fechalocal =  LocalDate.parse(fechaReunion.substring(0, 10));
+        //this.fecha = Date.from(horaPrevista.atZone(ZoneId.systemDefault()).toInstant());
         invitados = new ArrayList<>();
         asistentes = new ArrayList<>();
         notas = new ArrayList<>();
         this.invitaciones = new ArrayList<>();
         this.ausentes = new ArrayList<>();
-        LocalDate fechalocal = fecha.toInstant()
+        /*
+        this.fechalocal = fecha.toInstant()
                 .atZone(ZoneId.systemDefault())
-                .toLocalDate();
+                .toLocalDate();*/
     }
-
-
+    public String getFecha(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return fechalocal.format(formatter);
+    }
+    public void setFecha(String fecha){
+        this.fechalocal =  LocalDate.parse(fecha.substring(0, 10));;
+    }
     public void agregarInvitado(Invitable invitado) throws InvitacionRepetidaException{
         try{
             if (TipoReunion.obtenerTipo(tipo) == null) {
@@ -214,18 +230,25 @@ public abstract class Reunion {
             if (TipoReunion.obtenerTipo(tipo) == null) {
                 throw new ReunionNoExisteException();
             } else {
+                finalizada = false;
                 horaInicio = Instant.now();
+                iniciada = true;
+
+
             }
         }catch (ReunionNoExisteException ex){
             System.out.println(ex.getMessage());
         }
     }
-    public void finalizar(){
+    public void finalizar(Instant horafinal){
         try{
             if (TipoReunion.obtenerTipo(tipo) == null) {
                 throw new ReunionNoExisteException();
             } else {
-                horaFin = Instant.now();
+                iniciada = false;
+                horaFin = horafinal;
+                finalizada = true;
+
             }
         }catch (ReunionNoExisteException ex){
             System.out.println(ex.getMessage());
@@ -249,5 +272,58 @@ public abstract class Reunion {
             System.out.println(ex.getMessage());
         }
     }
+    public void generarInforme(String rutaArchivo) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        try (BufferedWriter file = new BufferedWriter(new FileWriter(rutaArchivo))) {
+            file.write("===== INFORME DE REUNIÓN =====\n");
+            file.write("Fecha prevista: " + horaPrevista.toLocalDate() + "\n");
+            file.write("Hora prevista de inicio: " + horaPrevista.toLocalTime() + "\n");
+            file.write("Hora prevista de fin: " + duracionPrevista.toLocalTime() + "\n");
+            file.write("\nFecha actual: " + this.getFecha() + "\n\n");
 
+            LocalTime horaInicioLocal = horaInicio.atZone(ZoneId.systemDefault()).toLocalTime().truncatedTo(ChronoUnit.SECONDS);
+            String inicio = horaInicioLocal.format(formatter);
+            file.write("Hora de inicio real: " + inicio + "\n");
+            if (finalizada == true && horaFin != null) {
+                LocalTime horaFinalLocal = horaFin.atZone(ZoneId.systemDefault()).toLocalTime().truncatedTo(ChronoUnit.SECONDS);
+                String fin = horaFinalLocal.format(formatter);
+                Duration duracionReal = Duration.between(horaInicio, horaFin);
+                file.write("Hora de fin real: " + fin + "\n");
+                file.write("Duración real (minutos): " + duracionReal.toMinutes() + "\n");
+            }
+
+            file.write("Tipo de reunión: " + TipoReunion.obtenerTipo(tipo) + "\n");
+
+            if (this instanceof ReunionPresencial) {
+                file.write("Sala: " + sala_o_enlace + "\n");
+            } else if (this instanceof ReunionVirtual) {
+                file.write("Enlace: " + sala_o_enlace + "\n");
+            }
+
+            file.write("\n--- Participantes ---\n");
+            for (Asistencia a : asistentes) {
+                String tipoAsistencia;
+                if(a instanceof Retraso) {
+                    tipoAsistencia = " (Con retraso)" + ((Retraso) a).getHora();
+                } else {
+                    tipoAsistencia = "";
+                }
+                file.write("- " + a.getEmpleado().getNombre() + tipoAsistencia + "\n");
+            }
+
+            file.write("\n--- Ausentes ---\n");
+            for (Invitable i : ausentes) {
+                file.write("- " + i.getNombre() + "\n");
+            }
+
+            file.write("\n--- Notas ---\n");
+            for (Nota nota : notas) {
+                file.write("[" + nota.getFecha().toString() + "] " + nota.getNota() + "\n");
+            }
+
+            file.write("===============================\n");
+        } catch (IOException e) {
+            System.err.println("Error al escribir el informe: " + e.getMessage());
+        }
+    }
 }

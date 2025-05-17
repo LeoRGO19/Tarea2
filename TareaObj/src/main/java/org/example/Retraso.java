@@ -1,5 +1,6 @@
 package org.example;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class Retraso extends Asistencia{
@@ -10,8 +11,9 @@ public class Retraso extends Asistencia{
         this.hora = hora;
         this.horalocal = hora.atZone(ZoneId.systemDefault()).toLocalTime().truncatedTo(ChronoUnit.SECONDS);
     }
-    public Instant getHora(){
-        return hora;
+    public String getHora(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        return horalocal.format(formatter);
     }
     public void setHora(Instant hora){
         this.hora = hora;

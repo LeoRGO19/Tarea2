@@ -5,7 +5,7 @@ public class ReunionVirtual extends Reunion{
     private String enlace;
     private int tipoInt;
     public ReunionVirtual(String enlaceReunion,Empleado organizador, String fechaReunion, int tiempoReunion, int tipo) throws TipoReunionInvalidoException{
-        super(organizador,fechaReunion,tiempoReunion, tipo);
+        super(organizador,fechaReunion,tiempoReunion, tipo, enlaceReunion);
         try{
             TipoReunion tipoValido = TipoReunion.obtenerTipo(tipo);
             if (tipoValido == null) {

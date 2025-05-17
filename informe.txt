@@ -1,0 +1,25 @@
+===== INFORME DE REUNIÓN =====
+Fecha prevista: 2025-05-21
+Hora prevista de inicio: 14:30
+Hora prevista de fin: 15:15
+
+Fecha actual: 2025-05-21
+
+Hora de inicio real: 20:23:54
+Hora de fin real: 20:40:35
+Duración real (minutos): 16
+Tipo de reunión: TECNICA
+Sala: sala1
+
+--- Participantes ---
+- Leo
+- Rafa
+- Martin (Con retraso)20:34:45
+
+--- Ausentes ---
+- Maria
+
+--- Notas ---
+[2025-05-16 20:23:55] contenido de la nota 1
+[2025-05-16 20:34:45] contenido de la nota 2
+===============================

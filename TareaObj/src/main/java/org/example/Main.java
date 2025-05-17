@@ -33,7 +33,7 @@ public class Main {
         Departamento n = new Departamento("Informática");
         Empleado leo = new Empleado("Leo", "Guerrero", "123", "leoth159@gmal.com", n.getNombre());
 
-        Reunion reunion = new ReunionPresencial("sala1", leo, "2025-05-21T14:30", 45, 4);
+        Reunion reunion = new ReunionPresencial("sala1", leo, "2025-05-21T14:30", 45, 1);
         reunion.iniciar();
         System.out.println(reunion);
         Empleado rafa = new Empleado("Rafa", "Ortega", "222", "leoth159@gmal.com", n.getNombre());
@@ -46,9 +46,8 @@ public class Main {
         n.addEmpleado(martin);
         System.out.println(n);
 
-
         //prueba agregar a la lista de invitados
-        reunion.agregarInvitado(leo);
+        reunion.agregarInvitado(n);
         /*
         reunion.agregarInvitado(leo);
         reunion.agregarInvitado(rafa);
@@ -60,17 +59,21 @@ public class Main {
         reunion.agregarAsistente(leo, Instant.now());
         reunion.agregarAsistente(rafa,Instant.now());
         reunion.agregarAsistente(martin, tiempo_martin);
-
-
+        Nota n1 = new Nota("contenido de la nota 1",Instant.now());
+        Nota n2 = new Nota("contenido de la nota 2",tiempo_martin);
+        reunion.addNota(n1);
+        reunion.addNota(n2);
+        Instant tiempof = Instant.now().plusSeconds(1000);
+        reunion.finalizar(tiempof);
         ArrayList<Invitable> prueba2 = reunion.obtenerAsistencias();
-
+        reunion.generarInforme("C:/Users/Leorg/OneDrive/Escritorio/Tarea2/informe.txt");
        // System.out.println(prueba2);
       //  System.out.println(reunion.obtenerTotalAsistencia());
         System.out.println(reunion.obtenerPorcentajeAsistencia());
        System.out.println(reunion.obtenerAusencias());
        // System.out.println(reunion.obtenerRetrasos());
        // System.out.println(reunion.getInvitados());
-        reunion.finalizar();
+
         Instant ahora = Instant.now();
         Instant enUnaHora = ahora.plus(Duration.ofHours(1));
         System.out.println(reunion.calcularTiempoReal(ahora,enUnaHora));
