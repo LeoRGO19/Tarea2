@@ -141,7 +141,7 @@ public abstract class Reunion {
             } else {
                 ArrayList<Invitable> presentes = new ArrayList<>();
                 for (Asistencia a : asistentes) {
-                    presentes.add(a.getEmpleado());
+                    presentes.add(a.getAsistente());
                 }
                 return presentes;
             }
@@ -172,7 +172,7 @@ public abstract class Reunion {
                 ArrayList<Invitable> atrasados = new ArrayList<>();
                 for (Asistencia a : asistentes){
                     if (a instanceof Retraso){
-                        atrasados.add(a.getEmpleado());
+                        atrasados.add(a.getAsistente());
                     }
                 }
                 return atrasados;
@@ -328,7 +328,7 @@ public abstract class Reunion {
                 } else {
                     tipoAsistencia = "";
                 }
-                file.write("- " + a.getEmpleado().getNombre() + tipoAsistencia + "\n");
+                file.write("- " + a.getAsistente().getNombre() + tipoAsistencia + "\n");
             }
 
             file.write("\n--- Ausentes ---\n");

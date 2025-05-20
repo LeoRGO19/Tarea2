@@ -1,20 +1,20 @@
 package org.example;
 
 public class Asistencia{
-    private Invitable empleado;
-    public Asistencia(Invitable empleado) {
-        this.empleado = empleado;
+    private Invitable inv;
+    public Asistencia(Invitable inv) {
+        this.inv = inv;
     }
 
-    public Invitable getEmpleado(){
-        return empleado;
+    public Invitable getAsistente(){
+        return inv;
     }
-    public void setEmpleado(Empleado e){
-        this.empleado = e;
+    public void setAsistente(Invitable e){
+        this.inv = e;
     }
 
     @Override
     public String toString() {
-        return "Asistencia de: " + empleado.getNombre();
+        return "Asistencia de: " + inv.getNombre();
     }
 }

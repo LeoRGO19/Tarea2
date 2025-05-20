@@ -11,8 +11,6 @@ public class Nota {
     public Nota(String oracion1, Instant tiempo){
         this.contenido = oracion1;
         this.tiempo = LocalDateTime.ofInstant(tiempo, ZoneId.systemDefault());
-
-
     }
     public void setNota (String oracion){
         this.contenido = oracion;

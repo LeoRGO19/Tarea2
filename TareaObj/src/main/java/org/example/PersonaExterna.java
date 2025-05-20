@@ -14,7 +14,22 @@ public class PersonaExterna implements Invitable{
     public void invitar() {
         System.out.println("La invitación a sido enviada a: " + nombre + " " + apellidos + " " + " correo: " + correo);;
     }
+    public void setNombre(String nombre){
+        this.nombre = nombre;
+    }
 
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+    public void setCorreo(String correo){
+        this.correo = correo;
+    }
+    public String getApellidos(){
+        return apellidos;
+    }
+    public String getCorreo(){
+        return correo;
+    }
     @Override
     public String getNombre() {
         return nombre;

@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit;
 
 public class Retraso extends Asistencia{
     private Instant hora;
-    LocalTime horalocal;
+    private LocalTime horalocal;
     Retraso(Invitable empleado, Instant hora){
         super(empleado);
         this.hora = hora;
@@ -21,6 +21,6 @@ public class Retraso extends Asistencia{
 
     @Override
     public String toString() {
-        return "Retraso de " + getEmpleado().getNombre() + ": Llegó a las " + horalocal;
+        return "Retraso de " + getAsistente().getNombre() + ": Llegó a las " + horalocal;
     }
 }
