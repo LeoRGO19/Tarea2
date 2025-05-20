@@ -25,13 +25,6 @@ public class Departamento implements Invitable{
     public ArrayList<Empleado> obtenerListaDepartamento(){
         return empleados;
     }
-    /*
-    @Override
-    public void invitar() {
-        for (Empleado e : empleados) {
-            e.invitar();
-        }
-    }*/
 
     @Override
     public void invitar() {
