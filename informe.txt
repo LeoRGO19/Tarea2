@@ -5,21 +5,21 @@ Hora prevista de fin: 15:15
 
 Fecha actual: 2025-05-21
 
-Hora de inicio real: 20:23:54
-Hora de fin real: 20:40:35
-Duración real (minutos): 16
+Hora de inicio real: 17:29:06
+Hora de fin real: 20:30:07
+Duración real: 3 horas, 1 minutos y 1 segundos 
 Tipo de reunión: TECNICA
 Sala: sala1
 
 --- Participantes ---
 - Leo
 - Rafa
-- Martin (Con retraso)20:34:45
+- Martin (Con retraso)17:39:56
 
 --- Ausentes ---
 - Maria
 
 --- Notas ---
-[2025-05-16 20:23:55] contenido de la nota 1
-[2025-05-16 20:34:45] contenido de la nota 2
+[2025-05-20 17:29:06] contenido de la nota 1
+[2025-05-20 17:39:56] contenido de la nota 2
 ===============================

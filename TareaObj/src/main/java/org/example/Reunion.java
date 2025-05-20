@@ -35,8 +35,6 @@ public abstract class Reunion {
         this.tipo = tipo;
         this.horaPrevista = LocalDateTime.parse(fechaReunion);
         this.duracionPrevista = horaPrevista.plus(Duration.ofMinutes(tiempoReunion));
-        System.out.println(horaPrevista);
-        System.out.println(duracionPrevista);
         this.fechalocal =  LocalDate.parse(fechaReunion.substring(0, 10));
         //this.fecha = Date.from(horaPrevista.atZone(ZoneId.systemDefault()).toInstant());
         invitados = new ArrayList<>();
@@ -58,7 +56,7 @@ public abstract class Reunion {
     }
     public void agregarInvitado(Invitable invitado) throws InvitacionRepetidaException{
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 if (invitado instanceof Departamento) {
@@ -99,7 +97,7 @@ public abstract class Reunion {
     }
     public ArrayList<Invitable> getInvitados() {
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 return invitados;
@@ -111,7 +109,10 @@ public abstract class Reunion {
     }
     public void agregarAsistente(Invitable invitado,Instant tiempo_Entrada){
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (horaInicio ==null) {
+                throw new ReunionNoIniciadaException();
+            }
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 if (!invitados.contains(invitado)) {
@@ -128,14 +129,14 @@ public abstract class Reunion {
                     ausentes.remove(invitado);
                 }
             }
-        }catch (ReunionNoExisteException ex){
+        }catch (ReunionNoIniciadaException | ReunionNoExisteException ex){
             System.out.println(ex.getMessage());
         }
     }
 
     public ArrayList<Invitable> obtenerAsistencias() {
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 ArrayList<Invitable> presentes = new ArrayList<>();
@@ -152,7 +153,7 @@ public abstract class Reunion {
     }
     public ArrayList<Invitable> obtenerAusencias(){
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 return ausentes;
@@ -165,7 +166,7 @@ public abstract class Reunion {
 
     public ArrayList<Invitable> obtenerRetrasos(){
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 ArrayList<Invitable> atrasados = new ArrayList<>();
@@ -183,7 +184,7 @@ public abstract class Reunion {
     }
     public int obtenerTotalAsistencia(){
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 return asistentes.size();
@@ -196,7 +197,7 @@ public abstract class Reunion {
     }
     public float obtenerPorcentajeAsistencia(){
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 System.out.println(asistentes);
@@ -211,23 +212,28 @@ public abstract class Reunion {
     }
     public float calcularTiempoReal(Instant inicio, Instant Final){
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
-            } else {
+            }
+            if (horaFin ==null){
+                throw new ReunionNoFinalizadaException();
+            }
+
+            else {
                 if (horaInicio != null && horaFin != null) {
                     Duration diferencia = Duration.between(inicio, Final); //Me falta ver como poner tiempos especificos
                     return (float) diferencia.toSeconds();
                 }
                 return 0;
             }
-        }catch (ReunionNoExisteException ex){
+        }catch (ReunionNoExisteException | ReunionNoFinalizadaException ex){
             System.out.println(ex.getMessage());
             return -1;
         }
     }
     public void iniciar(){
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 finalizada = false;
@@ -242,7 +248,7 @@ public abstract class Reunion {
     }
     public void finalizar(Instant horafinal){
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 iniciada = false;
@@ -256,14 +262,19 @@ public abstract class Reunion {
     }
     @Override
     public String toString() {
-        return devolverN() + " organizada por: " + organizador.getNombre();
+        if (organizador != null) {
+            return devolverN() + " organizada por: " + organizador.getNombre();
+        }
+        else{
+            return "Reunion inválida";
+        }
     }
     public String devolverN(){
         return null;
     }
     public void addNota(Nota e){
         try{
-            if (TipoReunion.obtenerTipo(tipo) == null) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
                 throw new ReunionNoExisteException();
             } else {
                 notas.add(e);
@@ -272,24 +283,33 @@ public abstract class Reunion {
             System.out.println(ex.getMessage());
         }
     }
-    public void generarInforme(String rutaArchivo) {
+    public void generarInforme(String rutaArchivo) throws ReunionNoIniciadaException{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
         try (BufferedWriter file = new BufferedWriter(new FileWriter(rutaArchivo))) {
+            if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null){
+                throw new ReunionNoExisteException();
+            }
             file.write("===== INFORME DE REUNIÓN =====\n");
             file.write("Fecha prevista: " + horaPrevista.toLocalDate() + "\n");
             file.write("Hora prevista de inicio: " + horaPrevista.toLocalTime() + "\n");
             file.write("Hora prevista de fin: " + duracionPrevista.toLocalTime() + "\n");
             file.write("\nFecha actual: " + this.getFecha() + "\n\n");
 
-            LocalTime horaInicioLocal = horaInicio.atZone(ZoneId.systemDefault()).toLocalTime().truncatedTo(ChronoUnit.SECONDS);
-            String inicio = horaInicioLocal.format(formatter);
-            file.write("Hora de inicio real: " + inicio + "\n");
+            if (horaInicio != null){
+                LocalTime horaInicioLocal = horaInicio.atZone(ZoneId.systemDefault()).toLocalTime().truncatedTo(ChronoUnit.SECONDS);
+                String inicio = horaInicioLocal.format(formatter);
+                file.write("Hora de inicio real: " + inicio + "\n");
+            }
+            else{
+                throw new ReunionNoIniciadaException();
+            }
             if (finalizada == true && horaFin != null) {
                 LocalTime horaFinalLocal = horaFin.atZone(ZoneId.systemDefault()).toLocalTime().truncatedTo(ChronoUnit.SECONDS);
                 String fin = horaFinalLocal.format(formatter);
                 Duration duracionReal = Duration.between(horaInicio, horaFin);
                 file.write("Hora de fin real: " + fin + "\n");
-                file.write("Duración real (minutos): " + duracionReal.toMinutes() + "\n");
+                file.write("Duración real: " + duracionReal.toHours() + " horas, "+ duracionReal.toMinutesPart() +" minutos y " + duracionReal.toSecondsPart() + " segundos \n");
             }
 
             file.write("Tipo de reunión: " + TipoReunion.obtenerTipo(tipo) + "\n");
@@ -322,7 +342,7 @@ public abstract class Reunion {
             }
 
             file.write("===============================\n");
-        } catch (IOException e) {
+        } catch (IOException |ReunionNoExisteException e) {
             System.err.println("Error al escribir el informe: " + e.getMessage());
         }
     }
