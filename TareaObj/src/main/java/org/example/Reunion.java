@@ -11,6 +11,15 @@ import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
+/**
+ * Clase abstracta que representa una reunión genérica. Contiene lógica común
+ * para reuniones presenciales y virtuales, como la gestión de invitados,
+ * asistencias, ausencias, retrasos y generación de informes.
+ *
+ * @author Francisco Fuentealba
+ * @author Leonardo Guerrero
+ */
+
 public abstract class Reunion {
     //private Date fecha;
     private LocalDateTime horaPrevista;
@@ -28,6 +37,16 @@ public abstract class Reunion {
     private LocalDate fechalocal;
     private boolean finalizada = true;
     private boolean iniciada = false;
+
+    /**
+     * Constructor para crear una reunión.
+     *
+     * @param organizador el empleado que organiza la reunión.
+     * @param fechaReunion la fecha y hora previstas en formato "yyyy-MM-ddTHH:mm".
+     * @param tiempoReunion duración estimada en minutos.
+     * @param tipo tipo de reunión.
+     * @param sala_enlace nombre de sala o enlace (según sea presencial o virtual).
+     */
 
     public Reunion(Empleado organizador, String fechaReunion, int tiempoReunion, int tipo, String sala_enlace){
         this.sala_o_enlace = sala_enlace;
@@ -47,13 +66,33 @@ public abstract class Reunion {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();*/
     }
+
+    /**
+     * Devuelve la fecha de la reunión en formato yyyy-MM-dd.
+     *
+     * @return fecha establecida.
+     */
+
     public String getFecha(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return fechalocal.format(formatter);
     }
+
+    /**
+     * Establece una nueva fecha para la reunión.
+     * @param fecha nueva fecha en formato yyyy-MM-dd.
+     */
+
     public void setFecha(String fecha){
         this.fechalocal =  LocalDate.parse(fecha.substring(0, 10));;
     }
+
+    /**
+     * Agrega un invitado a la reunión. También maneja departamentos.
+     * @param invitado objeto que implementa la interfaz {@code Invitable}.
+     * @throws InvitacionRepetidaException si el invitado ya está registrado.
+     */
+
     public void agregarInvitado(Invitable invitado) throws InvitacionRepetidaException{
         try{
             if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
@@ -95,6 +134,12 @@ public abstract class Reunion {
         }
 
     }
+
+    /**
+     * Devuelve la lista de invitados de la reunión.
+     * @return lista de invitados o null si la reunión es inválida.
+     */
+
     public ArrayList<Invitable> getInvitados() {
         try{
             if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
@@ -107,6 +152,13 @@ public abstract class Reunion {
             return null;
         }
     }
+
+    /**
+     * Registra un asistente, marcando si llegó con retraso.
+     * @param invitado persona invitada.
+     * @param tiempo_Entrada instante en que llegó.
+     */
+
     public void agregarAsistente(Invitable invitado,Instant tiempo_Entrada){
         try{
             if (horaInicio ==null) {
@@ -134,6 +186,12 @@ public abstract class Reunion {
         }
     }
 
+    /**
+     * Obtiene la lista de asistentes.
+     *
+     * @return lista de asistentes.
+     */
+
     public ArrayList<Invitable> obtenerAsistencias() {
         try{
             if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
@@ -151,6 +209,13 @@ public abstract class Reunion {
         }
 
     }
+
+    /**
+     * Devuelve la lista de ausentes.
+     *
+     * @return La lista de ausentes.
+     */
+
     public ArrayList<Invitable> obtenerAusencias(){
         try{
             if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
@@ -163,6 +228,13 @@ public abstract class Reunion {
             return null;
         }
     }
+
+
+    /**
+     * Devuelve los asistentes que llegaron con retraso.
+     *
+     * @return Lista de asistentes con retraso.
+     */
 
     public ArrayList<Invitable> obtenerRetrasos(){
         try{
@@ -182,6 +254,13 @@ public abstract class Reunion {
             return null;
         }
     }
+
+    /**
+     * Devuelve el total de asistentes registrados.
+     *
+     * @return Cantidad de asistentes.
+     */
+
     public int obtenerTotalAsistencia(){
         try{
             if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
@@ -195,6 +274,13 @@ public abstract class Reunion {
         }
 
     }
+
+    /**
+     * Devuelve el porcentaje de asistencia respecto a los invitados.
+     *
+     * @return porcentaje (%) de asistencia de los invitados.
+     */
+
     public float obtenerPorcentajeAsistencia(){
         try{
             if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
@@ -210,6 +296,17 @@ public abstract class Reunion {
         }
 
     }
+
+
+    /**
+     * Calcula la duración real de la reunión en segundos.
+     *
+     * @param inicio Tiempo de inicio de la reunión.
+     * @param Final Tiempo de Finalización de la reunión
+     *
+     * @return Tiempo real de la reunión.
+     */
+
     public float calcularTiempoReal(Instant inicio, Instant Final){
         try{
             if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
@@ -231,6 +328,11 @@ public abstract class Reunion {
             return -1;
         }
     }
+
+    /**
+     * Marca la reunión como iniciada.
+     */
+
     public void iniciar(){
         try{
             if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
@@ -246,6 +348,12 @@ public abstract class Reunion {
             System.out.println(ex.getMessage());
         }
     }
+
+    /**
+     * Marca la reunión como finalizada.
+     * @param horafinal instante final de la reunión.
+     */
+
     public void finalizar(Instant horafinal){
         try{
             if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
@@ -260,6 +368,12 @@ public abstract class Reunion {
             System.out.println(ex.getMessage());
         }
     }
+
+
+    /**
+     * Devuelve un String con la reunión y su organizador.
+     */
+
     @Override
     public String toString() {
         if (organizador != null) {
@@ -269,9 +383,23 @@ public abstract class Reunion {
             return "Reunion inválida";
         }
     }
+
+    /**
+     * Método abstracto para obtener una descripción de la reunión.
+     *
+     * @return Retornará con polimorfismo sala o enlace, dependiendo el tipo de reunión.
+     */
+
     public String devolverN(){
         return null;
     }
+
+    /**
+     * Agrega una nota a la reunión.
+     *
+     * @param e Nota y su contenido.
+     */
+
     public void addNota(Nota e){
         try{
             if (TipoReunion.obtenerTipo(tipo) == null||sala_o_enlace == null||organizador == null) {
@@ -283,6 +411,13 @@ public abstract class Reunion {
             System.out.println(ex.getMessage());
         }
     }
+
+    /**
+     * Genera un informe detallado de la reunión en un archivo de texto.
+     * @param rutaArchivo ubicación del archivo de salida.
+     * @throws ReunionNoIniciadaException si la reunión no ha comenzado.
+     */
+
     public void generarInforme(String rutaArchivo) throws ReunionNoIniciadaException{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
