@@ -21,7 +21,7 @@ Y para los métodos anteriores también se creo agregarInvitado() y agregarAsist
 
 también la lista ArrayList<Nota> notas para guardar las notas de la reunión y poder mostrarlas luego, y en función de eso se añade el método addNota() para poder llenar la lista
 
-Se creó un getter y un setter de la fecha, además de un getter de los invitados
+Se creó un getter y un setter de la fecha, además de un getter de los invitados -getInvitados()-
 En obtenerTiempoReal se modificó de modo que reciba dos argumentos para poder hacer las respectivas pruebas y medir tiempos distintos 
 
 Se crean las propiedades de tipo boolean iniciada y finalizada que aunque por ahora no reflejan mucho en la funcionalidad, si fuese una reunión con tiempo real si se harían notar
@@ -57,8 +57,8 @@ con el método invitar() y el toString pedido
 
 clase Departamento:
 
-se añadió la lista ArrayList<Empleado> empleados, el gettter, setter para el nombre del departamento, y el método añadir empleado para llenar la lista de empleados
-se creó el método toString como se pedía y método un envitar() con un loop para invitar a todos los empleados del departamento
+se añadió la lista ArrayList<Empleado> empleados, el gettter, setter para el nombre del departamento, y el método añadir empleado para llenar la lista de empleados -addEmpleado()-
+se creó el método toString como se pedía y método un envitar() con un loop para invitar a todos los empleados del departamento. Además se añadió el método obtenerListaDepartamento para poder acceder a la lista de empleados y manejar el error de la invitación repetida
 
 
 clase Asistencia:
